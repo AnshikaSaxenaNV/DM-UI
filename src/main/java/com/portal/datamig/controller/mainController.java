@@ -92,18 +92,7 @@ public class mainController {
                     .append(',')
                     .append(entry.getValue())
                     .append(eol);
-            }
-        // BufferedWriter bw =new BufferedWriter(new FileWriter(file));
-        // try {
-            
-        //     bw.write(lookup);
-        //     bw.newLine();
-        //     for (Map.Entry<String, String> entry : data.entrySet()) {
-        //         bw.write(entry.getKey() + ","
-        //                 + entry.getValue());
-        //         bw.newLine();
-        //     }
-            
+            }   
         } catch (
         IOException e)
         {
