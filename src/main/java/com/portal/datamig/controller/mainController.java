@@ -71,7 +71,6 @@ public class mainController {
             } catch (Exception e) {
                 throw new DataNotFoundException("Json file not found with name "+"entities");
             }
-            System.out.println(lookup+" get");
             model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));    
             model.addAttribute("data", map);
 
@@ -95,7 +94,6 @@ public class mainController {
                     .append(entry.getValue())
                     .append(eol);
             }
-        System.out.println(lookup);
         } catch (
         IOException e)
         {
