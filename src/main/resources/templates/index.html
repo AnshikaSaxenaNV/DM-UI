@@ -6,15 +6,7 @@
     <link rel="stylesheet" href="" th:href="@{/css/style.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#entity').change(function () {
-                var selectedFileName = $(this).children("option:selected").val();
-                var loc = "http://localhost:8080/api/download";
-                document.getElementById("download").setAttribute("href", loc + "/" + selectedFileName);
-            });
-        });
-    </script>
+    <script type="text/javascript" th:src="@{/js/listcsv.js}"></script>
 </head>
 
 
@@ -61,7 +53,7 @@
                     <tr>
                         <td><label for="Entity Name">Entity Name</label></td>
                         <td>
-                            <select class="form-control" id="dropDownList">
+                            <select class="form-control" id="entitylist">
                                 <option th:each="option : ${entities}" th:text="${option.Name}">
                                 </option>
                             </select>
@@ -75,17 +67,7 @@
                 <h3>Primary Lookup File</h3>
 
                 <form method="post">
-                    <table>
-                        <div class="form-group" th:each=" map : ${data}">
-                            <tr>
-                                <td><label th:text="${map.key}"></label></td>
-                                <td><input type="text" th:value="${map.value}" class="form-control"></td>
-                            </tr>
-                        </div>
-                        <tr>
-
-                        </tr>
-                    </table>
+                   <div id="csv_data_onselect"></div>
                 </form>
         </section>
 
@@ -94,17 +76,7 @@
             <h3>Secondary Lookup File (Optional)</h3>
 
             <form method="post">
-                <table>
-                    <div class="form-group" th:each=" map : ${data}">
-                        <tr>
-                            <td><label th:text="${map.key}"></label></td>
-                            <td><input type="text" th:value="${map.value}" class="form-control"></td>
-                        </tr>
-                    </div>
-                    <tr>
-
-                    </tr>
-                </table>
+                <div id="list_all_data"></div>
                 <button type="button">CLICK TO SUBMIT</button>
             </form>
             <table class="message">
