@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,11 +37,12 @@ public class mainController {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static String lookup;
+    private static String lookup="Field_Name,Field_Value";
+    
 
     @GetMapping("")
     public String main(Model model) throws IOException {
-        // Resource resource = new ClassPathResource("csvs/Global_Lookup.csv");
+        // Resource resource = new ClassPathResource("/csvs/Global_Lookup.csv");
         File file = new File("src/main/resources/csvs/Global_Lookup.csv");
         // FileReader filereader = new FileReader(file);
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -55,7 +57,7 @@ public class mainController {
                 allLines.add(splited);                
             }
 
-             Map<String, String> map = new HashMap<>();
+             Map<String, String> map = new LinkedHashMap<>();
             for(String[] row : allLines){
                 String key = row[0];
                 String value = row[1];
@@ -69,9 +71,8 @@ public class mainController {
             } catch (Exception e) {
                 throw new DataNotFoundException("Json file not found with name "+"entities");
             }
-            model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
-            System.out.println(objectMapper.readValue(staticDataString, Object.class));
-        
+            System.out.println(lookup+" get");
+            model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));    
             model.addAttribute("data", map);
 
             return "index";
@@ -84,6 +85,7 @@ public class mainController {
         String staticDataString=null;
         File file = new File("src/main/resources/csvs/Global_Lookup.csv");
         String eol = System.getProperty("line.separator");
+        
         try (Writer writer = new FileWriter(file)) {
             writer.append(lookup)
             .append(eol);
@@ -92,7 +94,8 @@ public class mainController {
                     .append(',')
                     .append(entry.getValue())
                     .append(eol);
-            }   
+            }
+        System.out.println(lookup);
         } catch (
         IOException e)
         {
