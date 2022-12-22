@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="" th:href="@{/css/validate.css}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::section})">
+
+
+<section class="primary">
+    <div>
+       
+        <h3 class="upload">Upload Primary file </h3>
+    
+        <table>
+            <tr>
+                <td>Entity Name</td>
+                <td>&nbsp;</td>
+                <td>
+                    <select id="entity">
+                        <option selected>Select Entity</option>
+                        <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <table > 
+                <div class="mybtn">
+                    
+                <a class="my-button"  href="#">UPLOAD </a>
+                <a class="my-button"  href="#">VALIDATE </a>
+             <div>
+                
+            </table>
+           
+        </table>
+      
+
+    </div>
+</section>
+<section class="secondary">
+    <div>
+        <h3 class="upload">Upload Secondary file </h3>
+    
+        <table>
+            <tr>
+                <td>Entity Name</td>
+                <td>&nbsp;</td>
+                <td>
+                    <select id="entity">
+                        <option selected>Select Entity</option>
+                        <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <table > 
+               
+                <div class="mybtn">
+                    <a class="my-button" href="#">UPLOAD </a>
+                    <a class="my-button"  href="#">VALIDATE </a>
+                 <div>
+            </table>
+           
+        </table>
+      
+
+    </div>
+</section>

@@ -74,7 +74,7 @@ public class mainController {
             model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));    
             model.addAttribute("data", map);
 
-            return "index";
+            return "admin";
 
         }
         
@@ -110,6 +110,26 @@ public class mainController {
         model.addAttribute("data", data);
         return "redirect:/api";
     }
-
+    @GetMapping("/api")
+    public String api(){
+        return "api";
+    }
+    @GetMapping("/load")
+    public String load(){
+        return "load";
+    }
+    @GetMapping("/report")
+    public String report(){
+        return "report";
+    }
+    @GetMapping("/transform")
+    public String transform(){
+        return "transform";
+    }
+    @GetMapping("/validate")
+    public String validate(){
+        return "validate";
+    }
     
 }
+

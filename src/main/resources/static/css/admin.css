@@ -6,17 +6,13 @@
   
     
 }
-
-
-
 .Nav{
     position: fixed;
-    overflow: hidden ;
     background-color: #ffffff;
-    margin-bottom: 10px;
+    /* margin-bottom: 20px; */
     display: flex;
     width: 100%;
-    height: 15% ;
+    height: 11% ;
     align-items:  center;
     justify-content: space-between;
     box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
@@ -41,15 +37,7 @@ td{
     width: 300px;
 }
 
-.nav1{
-    position: relative;
-   
-    color: #447efa;
-    font-weight: 600;
-   margin-top: 140px;
-    margin-left: 140px;
 
- }
  @media only screen and (max-width: 750px){
     .nav1{
         margin-top: 920px;
@@ -62,7 +50,7 @@ td{
  .form1{
     position: relative;
    padding-top: 10px;
-   margin-top: 10px;
+   margin-top: 100px;
    margin-left: 140px;
    margin-bottom: 25px;
    width: 80%;
@@ -108,9 +96,7 @@ td{
    width: 80%;
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
- .message , td{
-  margin-left: 100px;
- }
+ 
  h3{
     margin-bottom: 10px;
     /* background-color: #c8d8fa; */
@@ -118,7 +104,7 @@ td{
     font-weight: 600;
     margin-left: 100px;
     color: rgb(65, 64, 64);
-    padding: 5px;
+    padding: 10px;
  }
  /* #button { 
     margin-top: 10px !important;
@@ -150,7 +136,7 @@ td{
     margin-left: 403px;
 }
 .btn:hover {
-    color: #ffffff !important;
+    color: #ffffff ;
     cursor: pointer;
   }
 #entitylist{
@@ -162,27 +148,65 @@ td{
     border-radius: 6px;  
 }
 #entitylist:hover{
-    
-    background-color: #6a98fc !important;
-    color: #ffffff;
+   
+    background-color: #ffffff !important;
+    color: #000000;
 }
 #entity{
     cursor: pointer;
     border: 1px solid rgb(221, 220, 220);
     background-color: #ffffff;
     margin-right: 335px;
-    padding: 10px;
+    padding: 10px 10px;
     width: 300px;
     border: 1px solid rgb(221, 220, 220);
     background-color: #ffffff;
     border-radius: 6px;
 }
 #entity:hover{
-    background-color: #6a98fc;
-    color: #ffffff;  
+    background-color: #ffffff !important;
+    color: #000000;  
 }
 #download{
     padding: 8px;
     margin-left: -20px;
 }
-
+#menu-icon{
+    opacity: 0.6;
+}
+.dropbtn {
+    color: #ffffff ;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+  
+  .dropdown {
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    padding-right:9.5% ;
+    margin-top: 10px;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #6a98fc;}
+  
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  /* .dropdown:hover .dropbtn {background-color: #3e8e41;} */

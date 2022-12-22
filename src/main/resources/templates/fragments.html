@@ -1,0 +1,30 @@
+
+    <header th:fragment = "navbar">
+        <nav class="Nav fixed-top">
+
+            <img src="" th:src="@{/images/logo1.png}" alt="">
+            <h1>Oracle Utility - Data Migration Portal</h1>
+            <div> 
+                
+                    <!--<button class="dropbtn">Dropdown</button>-->
+                   <div class="dropdown" >
+                    <img id="menu-icon" class="dropbtn" src="" th:src="@{/images/menu-icon.png}" alt="">
+                    <div class="dropdown-content">
+                        <a th:href="@{/api}">admin</a>
+                        <a th:href="@{/api/validate}">validate </a>
+                        <a th:href="@{/api/transform}">transform </a>
+                        <a th:href="@{/api/load}">load </a>
+                        <a th:href="@{/api/report}">report </a>
+                       
+                       
+                </div>
+                </div>
+                <div class="logo"><img src="" class="logo2" th:src="@{/images/logo2.png}" alt=""></div>
+
+ 
+                    
+            </div>            
+
+        </nav>
+      
+</header>

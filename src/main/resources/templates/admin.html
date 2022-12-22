@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main})">
+
+<head>
+    <title>Data Migration Portal</title>
+
+</head>
+
+
+<body>
+
+    <main>
+        <section class="form1">
+            <div>
+
+                <h3>Global Lookup</h3>
+
+                <form id="form" method="post" th:action=@{/api} th:object="${data}" class="form-control">
+                    <table>
+                        <div class="form-group" th:each=" map : ${data}">
+                            <tr>
+                                <td><label id="key" th:name="${map.key}" th:text="${map.key}"></label></td>
+                                <td><input id="value" th:name="${map.key}" type="text" th:value="${map.value}"
+                                        class="form-control"></td>
+                            </tr>
+                        </div>
+
+                    </table>
+                    <div class="form-group">
+                        <input type="submit" value="SUBMIT" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section class="form2">
+            <div>
+                <h3>Fill Entity Lookup Field Values</h3>
+                <table>
+                    <tr>
+                        <td><label for="Entity Name">Entity Name</label></td>
+                        <td>
+                            <select id="entitylist">
+                                <option selected>Select Entity</option>
+                                <option th:each="option : ${entities}" th:text="${option.Name}">
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <section class="form3">
+            <div>
+                <h3>Primary Lookup File</h3>
+
+                <form method="post">
+                    <div id="csv_data_onselect"></div>
+                </form>
+            </div>
+        </section>
+
+        <section class="form4">
+
+            <h3>Secondary Lookup File (Optional)</h3>
+
+            <form method="post">
+                <div>
+                    <div id="list_all_data"></div>
+                    <button type="button" class="btn btn-success">SUBMIT</button>
+            </form>
+            <table class="message">
+                <tr>
+                    <td>Lookup values updated successfully</td>
+                </tr>
+                </div>
+
+            </table>
+        </section>
+        <section class="form5">
+            <div>
+                <h3>Download Entity Lookup Sample File</h3>
+
+                <div th:if="${ not#lists.isEmpty(entities)}">
+                    <table>
+                        <tr>
+                            <td>Entity Name</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <select id="entity">
+                                    <option selected>Select Entity</option>
+                                    <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <table>
+                </div>
+                <!-- <td> -->
+                <!-- <a th:href="@{http://localhost:9083/api/download/Global_Lookup"> -->
+                <!-- <a href="http://localhost:9083/api/download/Global_Lookup"> -->
+                <a id="download">
+                    <button type="button" class="btn btn-success">DOWNLOAD</button>
+                </a>
+                <!-- <button type="button">CLICK TO DOWNLOAD FILE</button> -->
+            </div>
+        </section>
+      
+    </main>
+
+</body>
+
+</html>
