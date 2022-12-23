@@ -1,7 +1,8 @@
 <link rel="stylesheet" href="" th:href="@{/css/validate.css}">
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::section})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main   })">
 
 
+<main id="main">
 <section class="primary">
     <div>
        
@@ -19,12 +20,20 @@
                     </select>
                 </td>
             </tr>
-            <table > 
-                <div class="mybtn">
-                    
-                <a class="my-button"  href="#">UPLOAD </a>
-                <a class="my-button"  href="#">VALIDATE </a>
-             <div>
+            <table >
+             
+                <div class="mybtn"> 
+                                   
+                        <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+                        <form method="post" th:action="@{/api/upload}" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input type="file" name="file" class="form-control-file">
+                            </div>
+                            <button type="submit" class="btn btn-primary">UPLOAD</button>
+                            <button type="submit" class="btn btn-primary">VALIDATE</button>
+                        </form>
+                
+                 </div>
                 
             </table>
            
@@ -49,12 +58,20 @@
                     </select>
                 </td>
             </tr>
-            <table > 
+            <table> 
                
-                <div class="mybtn">
-                    <a class="my-button" href="#">UPLOAD </a>
-                    <a class="my-button"  href="#">VALIDATE </a>
-                 <div>
+               
+                    <div class="mybtn">
+                    
+                        <p th:text="${messageS}" th:if="${messageS ne null}" class="alert alert-primary"></p>
+                        <form method="post" th:action="@{/api/upload/s}" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input type="file" name="file" class="form-control-file">
+                            </div>
+                            <button type="submit" class="btn btn-primary">UPLOAD</button>
+                            <button type="submit" class="btn btn-primary">VALIDATE</button>
+                        </form>
+                    </div>
             </table>
            
         </table>
@@ -62,3 +79,4 @@
 
     </div>
 </section>
+</main>
