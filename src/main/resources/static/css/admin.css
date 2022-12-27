@@ -6,6 +6,10 @@
   
     
 }
+/* html,body{
+  height: 0;
+  width: 0  ;
+} */
 #main{
   display: flex;
   flex-direction: column;
@@ -36,8 +40,7 @@ table{
     margin-top: 40px;
     margin-left: 100px;  
 }
-td{
-   
+td{   
     padding: 2px;
     width: 300px;
 }
@@ -58,7 +61,7 @@ td{
    margin-top: 140px;
    padding: 20px;
    margin-bottom: 25px;
-   width: 80%;
+   /* width: 80%; */
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
  .form2{
@@ -68,7 +71,7 @@ td{
     margin-top: 20px;
    
    margin-bottom: 25px;
-   width: 80%;
+   /* width: 80%; */
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
  .form3{
@@ -78,7 +81,7 @@ td{
     margin-top: 20px;
  
    margin-bottom: 25px;
-   width: 80%;
+   /* width: 80%; */
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
  .form4{
@@ -88,7 +91,7 @@ td{
     margin-top: 20px;
   
    margin-bottom: 25px;
-   width: 80%;
+   /* width: 80%; */
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
  .form5{
@@ -98,7 +101,7 @@ td{
     margin-top: 20px;
   
    margin-bottom: 25px;
-   width: 80%;
+   /* width: 80%; */
    box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
  

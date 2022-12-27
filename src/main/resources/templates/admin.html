@@ -9,8 +9,8 @@
 
 <body>
 
-    <main id="main">
-        <section class="form1">
+    <main id="main" >
+        <section class="form1 container-md">
             <div>
 
                 <h3>Global Lookup</h3>
@@ -32,41 +32,65 @@
                 </form>
             </div>
         </section>
-        <section class="form2">
+        <section class="form2 container-md">
             <div>
                 <h3>Fill Entity Lookup Field Values</h3>
+                <form th:action="@{/api/add}"  th:object="${entities}" th:method="post">
                 <table>
                     <tr>
                         <td><label for="Entity Name">Entity Name</label></td>
                         <td>
                             <select id="entitylist">
                                 <option selected>Select Entity</option>
-                                <option th:each="option : ${entities}" th:text="${option.Name}">
+                                <option th:each="option : ${entities}"  th:value="${option.Name}" th:text="${option.Name}" th:name="${option.Name}">
                                 </option>
                             </select>
                         </td>
                     </tr>
                 </table>
+            </form>
             </div>
         </section>
-        <section class="form3">
+        <section class="form3 container-md">
             <div>
                 <h3>Primary Lookup File</h3>
 
-                <form method="post">
-                    <div id="csv_data_onselect"></div>
+                <form id="formread" th:object="${csvfile}">
+                    <table>
+                        <div class="form-group" th:each=" map : ${csvfile}">
+                            <tr>
+                                <td><label id="key" th:name="${map.key}" th:text="${map.key}"></label></td>
+                                <td><input id="value" th:name="${map.key}" type="text" th:value="${map.value}"
+                                        class="form-control"></td>
+                            </tr>
+                        </div>
+                    </table>
                 </form>
-            </div>
+                </div>
         </section>
 
-        <section class="form4">
+        <section class="form4 container-md">
 
             <h3>Secondary Lookup File (Optional)</h3>
 
-            <form method="post">
-                <div>
-                    <div id="list_all_data"></div>
-                    <button type="button" class="btn btn-success">SUBMIT</button>
+            <form id="formreads" th:object="${csvfiles}">
+                <table th:each="entry: ${csvfiles}">
+
+                    <div class="form-group" th:each=" map : ${entry}">
+                        <tr>
+                            <td><input id="key" type="text" th:name="${map.key}" th:value="${map.key}"></label></td>
+                            <td><input id="value" th:name="${map.key}" type="text" th:value="${map.value}"
+                                    class="form-control"></td>
+                                    <td><input type="button" value="X"></td>
+                        </tr>
+                        
+                    </div>
+                <tr>
+                    <td>
+                    <button>+</button>
+                </td>
+                </tr>
+                </table>
             </form>
             <table class="message">
                 <tr>
@@ -76,7 +100,7 @@
 
             </table>
         </section>
-        <section class="form5">
+        <section class="form5 container-md">
             <div>
                 <h3>Download Entity Lookup Sample File</h3>
 

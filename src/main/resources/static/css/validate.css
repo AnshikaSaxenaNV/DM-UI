@@ -6,6 +6,7 @@
   
     
 }
+
 .upload{
     padding: 15px;
 }
@@ -19,4 +20,20 @@
     width: 80%;
     box-shadow: 0 5px 10px rgb(0 0 0 / 0.1)
  }
-
+#btn{
+    margin-left: 25.5rem;
+}
+#btn2{
+    margin-left: 1rem;
+}
+#group{
+    margin-left: 25.5rem;  
+    margin-top: 1rem;
+}
+#mybtn-para{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(91, 205, 91);
+}

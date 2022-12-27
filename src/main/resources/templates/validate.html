@@ -11,7 +11,6 @@
         <table>
             <tr>
                 <td>Entity Name</td>
-                <td>&nbsp;</td>
                 <td>
                     <select id="entity">
                         <option selected>Select Entity</option>
@@ -24,13 +23,13 @@
              
                 <div class="mybtn"> 
                                    
-                        <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+                        <p id="mybtn-para" th:text="${message}" th:if="${message ne null}" class=""></p>
                         <form method="post" th:action="@{/api/upload}" enctype="multipart/form-data">
-                            <div class="form-group">
+                            <div class="form-group" id="group">
                                 <input type="file" name="file" class="form-control-file">
                             </div>
-                            <button type="submit" class="btn btn-primary">UPLOAD</button>
-                            <button type="submit" class="btn btn-primary">VALIDATE</button>
+                            <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
+                            <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
                         </form>
                 
                  </div>
@@ -49,7 +48,6 @@
         <table>
             <tr>
                 <td>Entity Name</td>
-                <td>&nbsp;</td>
                 <td>
                     <select id="entity">
                         <option selected>Select Entity</option>
@@ -63,13 +61,13 @@
                
                     <div class="mybtn">
                     
-                        <p th:text="${messageS}" th:if="${messageS ne null}" class="alert alert-primary"></p>
+                        <p id="mybtn-para" th:text="${messageS}" th:if="${messageS ne null}" class=""></p>
                         <form method="post" th:action="@{/api/upload/s}" enctype="multipart/form-data">
-                            <div class="form-group">
+                            <div class="form-group" id="group">
                                 <input type="file" name="file" class="form-control-file">
                             </div>
-                            <button type="submit" class="btn btn-primary">UPLOAD</button>
-                            <button type="submit" class="btn btn-primary">VALIDATE</button>
+                            <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
+                            <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
                         </form>
                     </div>
             </table>

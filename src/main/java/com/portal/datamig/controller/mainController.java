@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portal.datamig.exception.DataNotFoundException;
+import com.portal.datamig.service.ReadService;
 
 
 @Controller
@@ -43,6 +44,11 @@ public class mainController {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    ReadService read;
+
+    private static String selectedValue;
 
     private static String lookup="Field_Name,Field_Value";
 
@@ -82,6 +88,14 @@ public class mainController {
             }
             model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));    
             model.addAttribute("data", map);
+
+            try {
+                model.addAttribute("csvfile",read.readCSVFile(selectedValue));
+                model.addAttribute("csvfiles",read.readCSVFiles(selectedValue));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             return "admin";
 
@@ -169,7 +183,7 @@ public class mainController {
         
         // check if file is empty
         if (file.isEmpty()) {
-            attributes.addFlashAttribute("message", "Please select a file to upload.");
+            attributes.addFlashAttribute("messageS", "Please select a file to upload.");
             return "redirect:/";
         }
 
@@ -189,7 +203,14 @@ public class mainController {
 
         return "redirect:/api/validate";
     }
-
+    @PostMapping("/add")
+    public String ent(@RequestParam Map<String, String> ent,Model model) throws IOException, Exception{
+        System.out.println(ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]","")+"HH");
+        selectedValue=ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]","");
+        model.addAttribute("csvfile",read.readCSVFile(selectedValue));
+        model.addAttribute("csvfiles",read.readCSVFiles(selectedValue));
+        return "redirect:/api";
+    }
     
 }
 
