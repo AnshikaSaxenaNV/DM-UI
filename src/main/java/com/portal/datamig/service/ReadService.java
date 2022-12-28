@@ -3,19 +3,30 @@ package com.portal.datamig.service;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 
 @Service
 public class ReadService {
+
+    private static String lookup = "Field_Name,Field_Value";
+
+    // display primary and Secondary files
     public List<Map<String, String>> readCSVFiles(String fname) {
         List<Map<String, String>> listMap = new ArrayList<>();
         String dirName = fname.toLowerCase();
@@ -52,7 +63,6 @@ public class ReadService {
         return listMap;
     }
 
-   
     public Map<String, String> readCSVFile(String name) throws IOException, Exception {
         String dirName = name.toLowerCase();
         Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/" + name + "Lookup" + ".csv");
@@ -84,9 +94,10 @@ public class ReadService {
         // System.out.println(key + " " + map.get(key));
         // }
         // model.addAttribute("csvdata",map);
-        
+
         return map;
     }
+
     public Map<String, String> printCSVFile(String name, String dirName) throws IOException {
         Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/" + name);
         File file = resource.getFile();
@@ -117,5 +128,69 @@ public class ReadService {
         }
         return map;
     }
-    
+
+    // For primary lookup update
+    public Map<String, String> saveLookup(Map<String, String> data, String fname) throws IOException {
+        System.out.println(data.entrySet());
+        String dirName = fname.toLowerCase();
+        // Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/" +
+        // fname + "Lookup" + ".csv");
+        File file = new File("src/main/resources/csvs/csvs/" + dirName + "/" + fname + "Lookup" + ".csv");
+        String eol = System.getProperty("line.separator");
+
+        try (Writer writer = new FileWriter(file)) {
+            writer.append(lookup)
+                    .append(eol);
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                writer.append(entry.getKey())
+                        .append(',')
+                        .append(entry.getValue())
+                        .append(eol);
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    // upload/copy for validate page
+    public void copyCSVFilesP(String loc) throws IOException {
+        String dir = loc.toLowerCase();
+
+        Path src = Paths.get("src/main/resources/client/" + dir + "/");
+        Path dest = Paths.get("src/main/resources/dmutil/input/" + dir + "/");
+        System.out.println(src.toString());
+        File f = src.toFile();
+        // int size = src.toFile().list().length;
+        // File src = new File("/home/data/src");
+        // File dest = new File("/home/data/dest");
+        Arrays.stream(f.listFiles()).filter(p -> !p.isDirectory()).forEach(p -> {
+            try {
+                FileUtils.copyFileToDirectory(p, dest.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void copyCSVFilesS(String loc) throws IOException {
+        String dir = loc.toLowerCase();
+
+        Path src = Paths.get("src/main/resources/client/" + dir + "/");
+        Path dest = Paths.get("src/main/resources/dmutil/input/" + dir + "/");
+        System.out.println(src.toString());
+        File f = src.toFile();
+        // int size = src.toFile().list().length;
+        // File src = new File("/home/data/src");
+        // File dest = new File("/home/data/dest");
+        Arrays.stream(f.listFiles()).filter(p -> p.isDirectory()).forEach(p -> {
+            try {
+                FileUtils.copyDirectoryToDirectory(p, dest.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
 }

@@ -5,67 +5,67 @@
 <main id="main">
 <section class="primary">
     <div>
-       
-        <h3 class="upload">Upload Primary file </h3>
-    
-        <table>
-            <tr>
-                <td>Entity Name</td>
-                <td>
-                    <select id="entity">
-                        <option selected>Select Entity</option>
-                        <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            <table >
-             
-                <div class="mybtn"> 
-                                   
-                        <p id="mybtn-para" th:text="${message}" th:if="${message ne null}" class=""></p>
-                        <form method="post" th:action="@{/api/upload}" enctype="multipart/form-data">
-                            <div class="form-group" id="group">
-                                <input type="file" name="file" class="form-control-file">
-                            </div>
-                            <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
-                            <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
-                        </form>
-                
-                 </div>
-                
+        <div>
+            <h3 class="upload">Upload Primary file </h3>
+            <form th:action="@{/api/validate}"  th:object="${entities}" th:method="post">   
+            <table>
+                <tr>
+                    <td>Entity Name</td>
+                    <td>
+                        <select id="entityValidate">
+                            <option selected>Select Entity</option>
+                            <option th:each=" data: ${entities}" th:name="${data.Name}" th:value="${data.Name}" th:text="${data.Name}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
             </table>
-           
-        </table>
-      
+            </form>
+                <table> 
+                   
+                   
+                        <div class="mybtn">
+                        
+                            <p id="mybtn-para" th:text="${messageP}" th:if="${messageP ne null}" class=""></p>
+                            <form th:action="@{/api/validate/upload}"  method="post">
+                                <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
+                                <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
+                            </form>
+                        </div>
+                </table>
+               
+            </table>
+          
+    
+        </div>
+       
 
     </div>
 </section>
 <section class="secondary">
     <div>
         <h3 class="upload">Upload Secondary file </h3>
-    
+        <form th:action="@{/api/validate}"  th:object="${entities}" th:method="post">   
         <table>
             <tr>
                 <td>Entity Name</td>
                 <td>
-                    <select id="entity">
+                    <select id="entityValidateS">
                         <option selected>Select Entity</option>
-                        <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
+                        <option th:each=" data: ${entities}" th:name="${data.Name}" th:value="${data.Name}" th:text="${data.Name}">
                         </option>
                     </select>
                 </td>
             </tr>
+        </table>
+        </form>
             <table> 
                
                
                     <div class="mybtn">
                     
                         <p id="mybtn-para" th:text="${messageS}" th:if="${messageS ne null}" class=""></p>
-                        <form method="post" th:action="@{/api/upload/s}" enctype="multipart/form-data">
-                            <div class="form-group" id="group">
-                                <input type="file" name="file" class="form-control-file">
-                            </div>
+                        <form th:action="@{/api/validate/uploadSec}"  method="post">
                             <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
                             <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
                         </form>

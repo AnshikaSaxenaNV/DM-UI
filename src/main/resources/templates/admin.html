@@ -15,7 +15,8 @@
 
                 <h3>Global Lookup</h3>
 
-                <form id="form" method="post" th:action=@{/api} th:object="${data}" class="form-control">
+                <form id="form" method="post" th:action=@{/api} th:object="${data}" onsubmit="return validateForm(this)" class="form-control">
+                   
                     <table>
                         <div class="form-group" th:each=" map : ${data}">
                             <tr>
@@ -24,7 +25,8 @@
                                         class="form-control"></td>
                             </tr>
                         </div>
-
+                        <tr><td colspan="2"><p id="setPrimary" th:text="${globalmessage}" th:if="${globalmessage ne null}" class=""></p></td>
+                        </tr>
                     </table>
                     <div class="form-group">
                         <input type="submit" value="SUBMIT" class="btn btn-success" />
@@ -55,7 +57,8 @@
             <div>
                 <h3>Primary Lookup File</h3>
 
-                <form id="formread" th:object="${csvfile}">
+                <form id="formread" th:action="@{/api/write}" th:object="${csvfile}" th:method="post">
+                    <p id="setPrimary" th:text="${Updatemessage}" th:if="${Updatemessage ne null}" class=""></p>
                     <table>
                         <div class="form-group" th:each=" map : ${csvfile}">
                             <tr>
@@ -65,6 +68,9 @@
                             </tr>
                         </div>
                     </table>
+                    <div class="form-group">
+                        <input type="submit" value="SUBMIT" class="btn btn-success" />
+                    </div>
                 </form>
                 </div>
         </section>
@@ -75,30 +81,40 @@
 
             <form id="formreads" th:object="${csvfiles}">
                 <table th:each="entry: ${csvfiles}">
+                    <tr>
+                            <th>Lookup Field</th>
+                            <th>Lookup Values</th>
+                        </tr>
 
                     <div class="form-group" th:each=" map : ${entry}">
+                        
                         <tr>
-                            <td><input id="key" type="text" th:name="${map.key}" th:value="${map.key}"></label></td>
+                            <td ><input id="key" type="text" th:name="${map.key}" th:value="${map.key}"></label></td>
                             <td><input id="value" th:name="${map.key}" type="text" th:value="${map.value}"
                                     class="form-control"></td>
-                                    <td><input type="button" value="X"></td>
+                                    <td><input id="buttonRemove"type="button" value="X"></td>
                         </tr>
                         
                     </div>
+                    <table id="newdata"></table>
                 <tr>
+                    
                     <td>
-                    <button>+</button>
+                    <button id="buttonAdd">+</button>
                 </td>
                 </tr>
                 </table>
+                <div class="form-group">
+                    <input type="submit" value="SUBMIT" class="btn btn-success" />
+                </div>
             </form>
-            <table class="message">
+            <!-- <table class="message">
                 <tr>
                     <td>Lookup values updated successfully</td>
                 </tr>
                 </div>
 
-            </table>
+            </table> -->
         </section>
         <section class="form5 container-md">
             <div>

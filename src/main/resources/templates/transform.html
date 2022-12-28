@@ -1,7 +1,25 @@
+<link rel="stylesheet" href="" th:href="@{/css/transform.css}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main})">
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::section})">
 
-
-<section>
-    
-</section>
+<main id="main">
+    <section class="transform-card container"  >
+        <div class="container-fluid">
+            <h3>Transform</h3>
+            <table>
+                <tr>
+                    <td><label for="Entity Name">Entity Name</label></td>
+                    <td>
+                        <select id="entitylist">
+                            <option selected>Select Entity</option>
+                            <option th:each="option : ${entities}" th:text="${option.Name}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                
+            </table>
+            <button type="submit" class="btn btn-primary" id="btn">VALIDATE</button>
+        </div>
+    </section>
+</main>

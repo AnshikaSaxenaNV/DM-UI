@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portal.datamig.exception.DataNotFoundException;
 import com.portal.datamig.service.ReadService;
@@ -49,6 +51,7 @@ public class mainController {
     ReadService read;
 
     private static String selectedValue;
+    private static String selectedValueValidate;
 
     private static String lookup="Field_Name,Field_Value";
 
@@ -102,7 +105,7 @@ public class mainController {
         }
         
         @PostMapping(value = "")
-    public String save(@RequestParam Map<String, String> data , Model model)throws IOException {
+    public String save(@RequestParam Map<String, String> data , Model model,RedirectAttributes attributes)throws IOException {
         System.out.println(data.entrySet());
         String staticDataString=null;
         File file = new File("src/main/resources/csvs/Global_Lookup.csv");
@@ -131,8 +134,10 @@ public class mainController {
             }
             model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
         model.addAttribute("data", data);
+        attributes.addFlashAttribute("globalmessage", "Global Lookup values successfully updated !!");
         return "redirect:/api";
     }
+    
   
     @GetMapping("/load")
     public String load(){
@@ -143,74 +148,94 @@ public class mainController {
         return "report";
     }
     @GetMapping("/transform")
-    public String transform(){
+    public String transform(Model model) throws JsonMappingException, JsonProcessingException{
+        String staticDataString=null;
+        try {
+            ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
+            staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new DataNotFoundException("Json file not found with name "+"entities");
+        }
+        model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
+       
         return "transform";
     }
-    @GetMapping("/validate")
-    public String validate(){
-        return "validate";
-    }
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
-
-        
-        // check if file is empty
-        if (file.isEmpty()) {
-            attributes.addFlashAttribute("message", "Please select a file to upload.");
-            return "redirect:/";
-        }
-
-        // normalize the file path
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        // save the file on the local file system
-        try {
-            Path path = Paths.get(UPLOAD_DIR+"Account/" + fileName);
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // return success response
-        attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
-
-        return "redirect:/api/validate";
-    }
-
-    @PostMapping("/upload/s")
-    public String uploadSFile(@RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
-
-        
-        // check if file is empty
-        if (file.isEmpty()) {
-            attributes.addFlashAttribute("messageS", "Please select a file to upload.");
-            return "redirect:/";
-        }
-
-        // normalize the file path
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        // save the file on the local file system
-        try {
-            Path path = Paths.get(UPLOAD_DIR+"Account/" + fileName);
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // return success response
-        attributes.addFlashAttribute("messageS", "You successfully uploaded " + fileName + '!');
-
-        return "redirect:/api/validate";
-    }
+    
     @PostMapping("/add")
-    public String ent(@RequestParam Map<String, String> ent,Model model) throws IOException, Exception{
-        System.out.println(ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]","")+"HH");
-        selectedValue=ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]","");
-        model.addAttribute("csvfile",read.readCSVFile(selectedValue));
-        model.addAttribute("csvfiles",read.readCSVFiles(selectedValue));
+    public String selectEntity(@RequestParam Map<String, String> ent, Model model)
+    throws IOException, Exception {
+        System.out.println(
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "HH"
+        );
+        selectedValue =
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "");
+        return "redirect:/api";
+  }
+    
+    @PostMapping("/write")
+    public String writeLookup(@RequestParam(required = false)Map<String, String> csvdata,Model model, RedirectAttributes attributes) throws IOException, Exception{
+        System.out.println("nlk/n/n/n/n/n/"+csvdata);
+        System.out.println(selectedValue);
+        read.saveLookup(csvdata, selectedValue);
+        attributes.addFlashAttribute("Updatemessage", "Primary Lookup values successfully updated !!");
+
         return "redirect:/api";
     }
+
+    @GetMapping("/validate")
+    public String validate(Model model) throws JsonMappingException, JsonProcessingException{
+        String staticDataString=null;
+        try {
+            ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
+            staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new DataNotFoundException("Json file not found with name "+"entities");
+        }
+        model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
+        return "validate";
+    }
+    @PostMapping("/validate")
+    public String listEntity(@RequestParam Map<String, String> ent, Model model)
+    throws IOException, Exception {
+        System.out.println(
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "HH"
+        );
+        selectedValueValidate =
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "");
+        return "redirect:/api/validate";
+  }
+  @PostMapping("/validate/upload")
+  public String uploadFile(RedirectAttributes attributes) {
+    System.out.println("sdfxgcvjhbx" + selectedValueValidate);
+    try {
+      read.copyCSVFilesP(selectedValueValidate);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // return success response
+    attributes.addFlashAttribute(
+      "messageP",
+      "You successfully uploaded " + selectedValueValidate + '!'
+    );
+    return "redirect:/api/validate";
+  }
+  @PostMapping("/validate/uploadSec")
+  public String uploadFileS(RedirectAttributes attributes) {
+    System.out.println("sdfxgcvjhbx" + selectedValueValidate);
+    try {
+      read.copyCSVFilesS(selectedValueValidate);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // return success response
+    attributes.addFlashAttribute(
+      "messageS",
+      "You successfully uploaded " + selectedValueValidate + '!'
+    );
+    return "redirect:/api/validate";
+  }
+
     
 }
-
