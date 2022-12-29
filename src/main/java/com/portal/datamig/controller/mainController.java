@@ -181,6 +181,14 @@ public class mainController {
 
         return "redirect:/api";
     }
+    @PostMapping("/writeS")
+    public String writeLookupS(@RequestParam(required = false)Map<String, String> csvdata,Model model, RedirectAttributes attributes) throws IOException, Exception{
+        System.out.println("SECONDARY DATA"+csvdata);
+        System.out.println(csvdata.keySet().stream().findFirst().get());
+        read.saveLookups(csvdata, selectedValue);
+        System.out.println("Secondary VALue updated");
+        return "redirect:/api";
+    }
 
     @GetMapping("/validate")
     public String validate(Model model) throws JsonMappingException, JsonProcessingException{

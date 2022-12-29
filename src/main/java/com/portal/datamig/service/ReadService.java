@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class ReadService {
     private static String lookup = "Field_Name,Field_Value";
 
     // display primary and Secondary files
-    public List<Map<String, String>> readCSVFiles(String fname) {
-        List<Map<String, String>> listMap = new ArrayList<>();
+    public Map<String, Map<String, String>> readCSVFiles(String fname) {
+        Map<String, Map<String, String>> listMap = new HashMap();
         String dirName = fname.toLowerCase();
         try {
             Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/");
@@ -48,15 +49,15 @@ public class ReadService {
             // Get the names of the files by using the .getName() method
             for (int i = 0; i < files.length; i++) {
                 System.out.println("file name" + files[i].getName());
-                listMap.add(printCSVFile(files[i].getName(), dirName));
+                listMap.put(files[i].getName(),printCSVFile(files[i].getName(), dirName));
             }
-            for (Map<String, String> map : listMap) {
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    System.out.println(key + " " + value);
-                }
-            }
+            // for (Map<String, String> map : listMap) {
+            //     for (Map.Entry<String, String> entry : map.entrySet()) {
+            //         String key = entry.getKey();
+            //         String value = entry.getValue();
+            //         System.out.println(key + " " + value);
+            //     }
+            // }
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -149,6 +150,37 @@ public class ReadService {
             }
         } catch (IOException e) {
 
+            e.printStackTrace();
+        }
+        return data;
+    }
+    public Map<String, String> saveLookups(Map<String, String> data, String fname) throws IOException{
+        System.out.println(data.entrySet());
+        String dirName = fname.toLowerCase();
+        String fileName=data.keySet().stream().findFirst().get();
+        //Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/" + fname + "Lookup" + ".csv");
+        File file = new File("src/main/resources/csvs/csvs/"+dirName+"/"+fileName);
+        System.out.println("src/main/resources/csvs/csvs/"+dirName+"/"+fileName);
+        String eol = System.getProperty("line.separator");
+        
+        int k = 0;
+        try (Writer writer = new FileWriter(file)) {
+            writer.append(lookup)
+                .append(eol);
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                if (k == 0) {
+                    k++;
+                    continue;
+                }
+              writer.append(entry.getKey())
+                    .append(',')
+                    .append(entry.getValue())
+                    .append(eol);
+            }
+        } catch (
+        IOException e)
+        {
+            
             e.printStackTrace();
         }
         return data;

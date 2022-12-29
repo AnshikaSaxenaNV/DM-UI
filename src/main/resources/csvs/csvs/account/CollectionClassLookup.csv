@@ -1,6 +1,6 @@
-CUST_CL_CD,COLL_CL_CD
+Field_Name,Field_Value
 C,COM/IND
 C-O,BILL
 I,COM/IND
 N,N/A
-R,RES
+R,RES-
