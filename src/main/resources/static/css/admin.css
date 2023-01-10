@@ -221,7 +221,7 @@ td{
   #setPrimary{
     margin-top: 1rem;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
     font-weight: 400;
     font-size: large;
@@ -250,4 +250,8 @@ td{
 #buttonRemove:hover{
   background-color: #f72e2ec3;
   color: #ffffff;  
+}
+section{
+  /* background-color: rgba(117, 114, 114, 0.119); */
+  background-image: linear-gradient(rgba(129, 127, 127, 0.088), rgba(117, 114, 114, 0.119));
 }

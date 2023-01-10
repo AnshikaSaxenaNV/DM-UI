@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,46 +35,42 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CSVController {
    
     @GetMapping("/download/{name}")
-    public void downloadAllFilesByDropdown(@PathVariable("name") String name,HttpServletResponse response) throws IOException {
+    public String downloadAllFilesByDropdown(@PathVariable("name") String name,HttpServletResponse response) throws IOException {
 //        HttpServletResponse response = null;
         String dirName = name.toLowerCase();
         try {
-            Resource resource = new ClassPathResource("/csvs/csvs/" + dirName + "/");
-            File f = resource.getFile();
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File f, String name) {
-                    
-                    // We want to find only .csv files
-                    return name.endsWith(".csv");
-                }
-            };
-            // Note that this time we are using a File class as an array,
-            // instead of String
-            File[] files = f.listFiles(filter);
-            List<String> n = new ArrayList<>();
-            // Get the names of the files by using the .getName() method
-            for (int i = 0; i < files.length; i++) {
-                System.out.println("file name" + files[i].getName());
-                n.add(files[i].getName());
+            File f = new File("src/main/resources/csvs/csvs/" + dirName+"/");
+            File fileList[] = f.listFiles();
+            Arrays.stream(fileList).iterator().forEachRemaining(System.out::println);
+            for (File r:fileList){
+                 if(r.isDirectory()){
+                     Arrays.stream(r.listFiles()).iterator().forEachRemaining(System.out::println);
+                 }
+            } 
+        }catch (Exception e) {
+                System.out.println("Directory is empty");
             }
-                ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
-                for (String fileName : n) {
-//                FileSystemResource fresource = new FileSystemResource("/csvs/" + dirName + "/" + fileName);
-                    Resource fresource = new ClassPathResource("/csvs/csvs/" + dirName + "/" + fileName);
-                    ZipEntry zipEntry = new ZipEntry(fresource.getFilename());
-                    zipEntry.setSize(fresource.contentLength());
-                    zipOut.putNextEntry(zipEntry);
-                    StreamUtils.copy(fresource.getInputStream(), zipOut);
-                    zipOut.closeEntry();
+            //test download
+            Path zipFile = Path.of("/home/anshika/DMUtil/Client/"+dirName+".zip");
+            File f = new File("src/main/resources/csvs/csvs/" + dirName+"/");
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFile))) {
+                if (Files.isDirectory(f.toPath())) {
+                    Files.walk(f.toPath()).filter(path -> !Files.isDirectory(path)).forEach(path -> {
+                        ZipEntry zipEntry = new ZipEntry(f.toPath().relativize(path).toString());
+                        try {
+                            zipOutputStream.putNextEntry(zipEntry);
+                            if (Files.isRegularFile(path)) {
+                                Files.copy(path, zipOutputStream);
+                            }
+                            zipOutputStream.closeEntry();
+                        } catch (IOException e) {
+                            System.err.println(e);
+                        }
+                    });
                 }
-            zipOut.finish();
-            zipOut.close();
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "zipFileName" + "\"");
-        } catch (Exception e) {
-            System.out.println("Directory is empty");
-        }
+            }
+            return "redirect:/api";
     }
-    
+        
+
 }

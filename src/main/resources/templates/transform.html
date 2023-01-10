@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="" th:href="@{/css/transform.css}">
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::main})}">
 
 
 <main id="main">
@@ -12,7 +12,7 @@
                     <td>
                         <select id="entitylist">
                             <option selected>Select Entity</option>
-                            <option th:each="option : ${entities}" th:text="${option.Name}">
+                            <option th:each="option : ${entities}" th:text="${option.key}">
                             </option>
                         </select>
                     </td>

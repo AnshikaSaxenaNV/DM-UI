@@ -1,9 +1,8 @@
-CIS_DIVISION_CUSTOMER_CLASS,ACCESS_GRP_CD
-CAC,***
+Field_Name,Field_Value
+CAC,**
 DIV1C,***
 CAC-O,MICHELIN
 CAI,***
 DIV1I,***
 CAN,***
-CAR,***
-DIV1R,***
+CAR,**

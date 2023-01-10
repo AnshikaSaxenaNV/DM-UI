@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::main})}">
 
 <head>
     <title>Data Migration Portal</title>
@@ -15,7 +15,7 @@
 
                 <h3>Global Lookup</h3>
 
-                <form id="form" method="post" th:action=@{/api} th:object="${data}" onsubmit="return validateForm(this)" class="form-control">
+                <form id="form" method="post" th:action=@{/api} th:object="${data}" onsubmit="return validateForm(this)">
                    
                     <table>
                         <div class="form-group" th:each=" map : ${data}">
@@ -33,6 +33,7 @@
                     </div>
                 </form>
             </div>
+            
         </section>
         <section class="form2 container-md">
             <div>
@@ -44,7 +45,7 @@
                         <td>
                             <select id="entitylist">
                                 <option selected>Select Entity</option>
-                                <option th:each="option : ${entities}"  th:value="${option.Name}" th:text="${option.Name}" th:name="${option.Name}">
+                                <option th:each="option : ${entities}"  th:value="${option.key}" th:text="${option.key}" th:name="${option.key}">
                                 </option>
                             </select>
                         </td>
@@ -79,22 +80,28 @@
 
             <h3>Secondary Lookup File (Optional)</h3>
 
-            <form id="formreads" th:action="@{/api/writeS}" method="post" th:object="${csvfiles}" th:each="entry: ${csvfiles}">
-                <table>
+                <p id="setPrimary" th:text="${UpdatemessageS}" th:if="${UpdatemessageS ne null}" class=""></p>
+            <form id="formreads" th:action="@{/api/writeS}" method="post" th:object="${csvfiles}" th:each="entry, id: ${csvfiles}">
+                   
+                <table th:id="table+${id.index}">
+                    <tr>
+                        <th th:text="${entry.key}" th:value="${entry.key}" th:name="${entry.key}"></th>
+                        <input type="hidden" th:name="${entry.key}">
+                    </tr>
                     <tr>
                         
                             <th>Lookup Field</th>
                             <th>Lookup Values</th>
-                            <th ><input type="hidden" th:name="${entry.key}"></th>
+                            
                         </tr>
 
-                    <div class="form-group" th:each=" map : ${entry.value}">
-                        
-                        <tr>
-                            <td ><input id="key" type="text" th:value="${map.key}"></label></td>
-                            <td><input id="value" th:name="${map.key}" type="text" th:value="${map.value}"
-                                    class="form-control"></td>
-                                    <td><input id="buttonRemove"type="button" value="X"></td>
+                        <div class="form-group" th:each=" map, i: ${entry.value}">
+                            <tr th:id="tableRow">
+                                <td><input type="text" th:name="|('${map.key}'+'${i.index}')|" th:value="${map.key}" class="form-control"></td>
+                                <td><input type="text" th:name="|('${map.value}'+'${i.index}')|" th:value="${map.value}"
+                                        class="form-control"></td>
+                                       
+                                        <td><input id="buttonRemove" type="button" value="X" th:onclick="|deleteRow(this,this.form)|"></td>
                         </tr>
                         
                     </div>
@@ -102,8 +109,10 @@
                 <tr>
                     
                     <td>
-                    <button id="buttonAdd">+</button>
-                </td>
+
+                        <input id="buttonAdd" type="button" value="+" th:onclick="|addRow('table${id.index}','tableRow')|">
+
+                    </td>
                 </tr>
                 </table>
                 <div class="form-group">
@@ -129,7 +138,7 @@
                             <td>
                                 <select id="entity">
                                     <option selected>Select Entity</option>
-                                    <option th:each=" data: ${entities}" th:value="${data.Name}" th:text="${data.Name}">
+                                    <option th:each=" data: ${entities}" th:value="${data.key}" th:text="${data.key}">
                                     </option>
                                 </select>
                             </td>

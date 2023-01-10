@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -66,7 +68,6 @@ public class mainController {
             BufferedReader br = new BufferedReader(new FileReader(file));
             lookup =br.readLine();
             String line;
-            String staticDataString=null;
            
             List<String[]> allLines = new ArrayList<>();
             
@@ -82,15 +83,9 @@ public class mainController {
                 map.put(key, value);
                 
                
-            }
-            try {
-                ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
-                staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
-            } catch (Exception e) {
-                throw new DataNotFoundException("Json file not found with name "+"entities");
-            }
-            model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));    
+            }    
             model.addAttribute("data", map);
+            model.addAttribute("entities", read.entityList());
 
             try {
                 model.addAttribute("csvfile",read.readCSVFile(selectedValue));
@@ -107,7 +102,7 @@ public class mainController {
         @PostMapping(value = "")
     public String save(@RequestParam Map<String, String> data , Model model,RedirectAttributes attributes)throws IOException {
         System.out.println(data.entrySet());
-        String staticDataString=null;
+        
         File file = new File("src/main/resources/csvs/Global_Lookup.csv");
         String eol = System.getProperty("line.separator");
         
@@ -126,14 +121,8 @@ public class mainController {
             
             e.printStackTrace();
         }
-         try {
-                ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
-                staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
-            } catch (Exception e) {
-                throw new DataNotFoundException("Json file not found with name "+"entities");
-            }
-            model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
         model.addAttribute("data", data);
+        model.addAttribute("entities", read.entityList());
         attributes.addFlashAttribute("globalmessage", "Global Lookup values successfully updated !!");
         return "redirect:/api";
     }
@@ -148,16 +137,9 @@ public class mainController {
         return "report";
     }
     @GetMapping("/transform")
-    public String transform(Model model) throws JsonMappingException, JsonProcessingException{
-        String staticDataString=null;
-        try {
-            ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
-            staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new DataNotFoundException("Json file not found with name "+"entities");
-        }
-        model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
-       
+    public String transform(Model model) throws IOException{
+        
+        model.addAttribute("entities", read.entityList());
         return "transform";
     }
     
@@ -165,7 +147,7 @@ public class mainController {
     public String selectEntity(@RequestParam Map<String, String> ent, Model model)
     throws IOException, Exception {
         System.out.println(
-        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "HH"
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + " Admin Seleted"
         );
         selectedValue =
         ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "");
@@ -174,7 +156,7 @@ public class mainController {
     
     @PostMapping("/write")
     public String writeLookup(@RequestParam(required = false)Map<String, String> csvdata,Model model, RedirectAttributes attributes) throws IOException, Exception{
-        System.out.println("nlk/n/n/n/n/n/"+csvdata);
+        System.out.println("write "+csvdata);
         System.out.println(selectedValue);
         read.saveLookup(csvdata, selectedValue);
         attributes.addFlashAttribute("Updatemessage", "Primary Lookup values successfully updated !!");
@@ -186,33 +168,36 @@ public class mainController {
         System.out.println("SECONDARY DATA"+csvdata);
         System.out.println(csvdata.keySet().stream().findFirst().get());
         read.saveLookups(csvdata, selectedValue);
+        attributes.addFlashAttribute("UpdatemessageS", "Secondary Lookup values successfully updated !!");
         System.out.println("Secondary VALue updated");
         return "redirect:/api";
     }
 
     @GetMapping("/validate")
-    public String validate(Model model) throws JsonMappingException, JsonProcessingException{
-        String staticDataString=null;
+    public String validate(Model model) throws IOException{
+
+        model.addAttribute("entities", read.entityList());
         try {
-            ClassPathResource staticDataResource = new ClassPathResource("/json/entities.json");
-            staticDataString = IOUtils.toString(staticDataResource.getInputStream(), StandardCharsets.UTF_8);
+            model.addAttribute("Secondaryentities", read.entityListSecondary(selectedValueValidate));
         } catch (Exception e) {
-            throw new DataNotFoundException("Json file not found with name "+"entities");
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        model.addAttribute("entities", objectMapper.readValue(staticDataString, Object.class));
         return "validate";
     }
     @PostMapping("/validate")
     public String listEntity(@RequestParam Map<String, String> ent, Model model)
     throws IOException, Exception {
         System.out.println(
-        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "HH"
+        ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "") + " Selected"
         );
         selectedValueValidate =
         ent.keySet().toString().replaceAll("\\[", "").replaceAll("\\]", "");
+
+        model.addAttribute("Secondaryentities", read.entityListSecondary(selectedValueValidate));
         return "redirect:/api/validate";
   }
-  @PostMapping("/validate/upload")
+  @PostMapping(value="/validate/upload", params="action=Upload")
   public String uploadFile(RedirectAttributes attributes) {
     System.out.println("sdfxgcvjhbx" + selectedValueValidate);
     try {
@@ -230,7 +215,7 @@ public class mainController {
   }
   @PostMapping("/validate/uploadSec")
   public String uploadFileS(RedirectAttributes attributes) {
-    System.out.println("sdfxgcvjhbx" + selectedValueValidate);
+    System.out.println("Secondary upload " + selectedValueValidate);
     try {
       read.copyCSVFilesS(selectedValueValidate);
     } catch (IOException e) {
@@ -244,6 +229,45 @@ public class mainController {
     );
     return "redirect:/api/validate";
   }
+
+  @PostMapping(value="/validate/upload", params="action=Validate")
+  public String callValidationProgram(RedirectAttributes attributes) throws IOException, InterruptedException{
+    String loc = "/home/anshika/DMUtil/Validate/CmCommonValidation.java";
+    String loc1 = "java -cp /home/anshika/DMUtil/Validate/CmCommonValidation"+" "+"/home/anshika/DMUtil/Input/"+selectedValueValidate+" "+"/home/anshika/DMUtil/Validate/Mapping_Sheet/"+selectedValueValidate+".csv";
+    String command[] = {"javac", loc};
+    ProcessBuilder processBuilder = new ProcessBuilder(command);
+    Process process = processBuilder.start();
+    process.waitFor();
+        if (process.getErrorStream().read() != -1) {
+            print("Compilation Errors",process.getErrorStream());
+        }
+        System.out.println(process.exitValue());
+        if (process.exitValue() == 0) {
+            process = new ProcessBuilder(new String[]{"java", "-cp", "/home/anshika/DMUtil/Validate/", "CmCommonValidation","/home/anshika/DMUtil/Input/"+selectedValueValidate,"/home/anshika/DMUtil/Validate/Mapping_Sheet/"+selectedValueValidate+".csv"}).start();
+            if (process.getErrorStream().read() != -1) {
+                print("Errors ", process.getErrorStream());
+            } else {
+                print("Output ", process.getInputStream());
+            }
+        }
+        // process.waitFor();
+        // process.exitValue();
+
+   attributes.addFlashAttribute(
+      "messageP",
+      "You successfully Validated " + selectedValueValidate + '!'
+    );
+   return "redirect:/api/validate";
+}
+private static void print(String status,InputStream input) throws IOException{
+    BufferedReader in = new BufferedReader(new InputStreamReader(input));
+    System.out.println("************* "+status+"***********************");
+    String line = null;
+    while((line = in.readLine()) != null ){
+        System.out.println(line);
+    }
+    in.close();
+}
 
     
 }

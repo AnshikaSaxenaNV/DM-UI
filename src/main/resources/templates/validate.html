@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="" th:href="@{/css/validate.css}">
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::main   })">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::main   })}">
 
 
 <main id="main">
@@ -14,7 +14,7 @@
                     <td>
                         <select id="entityValidate">
                             <option selected>Select Entity</option>
-                            <option th:each=" data: ${entities}" th:name="${data.Name}" th:value="${data.Name}" th:text="${data.Name}">
+                            <option th:each=" data: ${entities}" th:name="${data.key}" th:value="${data.key}" th:text="${data.key}">
                             </option>
                         </select>
                     </td>
@@ -28,8 +28,8 @@
                         
                             <p id="mybtn-para" th:text="${messageP}" th:if="${messageP ne null}" class=""></p>
                             <form th:action="@{/api/validate/upload}"  method="post">
-                                <button type="submit" class="btn btn-primary" id="btn">UPLOAD</button>
-                                <button type="submit" class="btn btn-primary" id="btn2">VALIDATE</button>
+                                <button type="submit" name="action" value="Upload" class="btn btn-primary" id="btn">UPLOAD</button>
+                                <button type="submit"  name="action" value="Validate" class="btn btn-primary" id="btn2">VALIDATE</button>
                             </form>
                         </div>
                 </table>
@@ -45,14 +45,14 @@
 <section class="secondary">
     <div>
         <h3 class="upload">Upload Secondary file </h3>
-        <form th:action="@{/api/validate}"  th:object="${entities}" th:method="post">   
+        <form th:action="@{/api/validate}"  th:object="${Secondaryentities}" th:method="post">   
         <table>
             <tr>
                 <td>Entity Name</td>
                 <td>
                     <select id="entityValidateS">
                         <option selected>Select Entity</option>
-                        <option th:each=" data: ${entities}" th:name="${data.Name}" th:value="${data.Name}" th:text="${data.Name}">
+                        <option th:each=" data: ${Secondaryentities}" th:name="${data.key}" th:value="${data.key}" th:text="${data.key}">
                         </option>
                     </select>
                 </td>
